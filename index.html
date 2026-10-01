@@ -112,6 +112,12 @@ img{max-width:100%;display:block;}
 }
 .section-label .dot{width:7px;height:7px;border-radius:50%;background:var(--yellow);flex-shrink:0;}
 .card h2{font-size:22px; margin-bottom:4px;}
+.stage-back{
+  display:inline-flex; align-items:center; gap:4px; background:none; border:0; padding:0;
+  margin-bottom:12px; font-family:var(--font-util); font-size:13px; font-weight:700;
+  color:var(--muted); cursor:pointer; -webkit-tap-highlight-color:transparent;
+}
+.stage-back:hover, .stage-back:focus-visible{color:var(--fg);}
 
 .why-box{
   display:flex; gap:14px; padding:18px; border-radius:14px;
@@ -350,6 +356,7 @@ body{margin:0;}
 
   <!-- STOP AND THINK -->
   <div class="card" id="quizCard" hidden>
+    <button type="button" class="stage-back" data-back="0">← Back</button>
     <div class="section-label"><span class="dot"></span>Stop and Think</div>
     <h2>What actually caused the shock?</h2>
     <div class="quiz-opts" id="quizOpts"></div>
@@ -359,6 +366,7 @@ body{margin:0;}
 
   <!-- SORT THE CONTROLS -->
   <div class="card" id="sortCard" hidden>
+    <button type="button" class="stage-back" data-back="1">← Back</button>
     <div class="section-label"><span class="dot"></span>Know Your Controls</div>
     <h2>Preventative or mitigative?</h2>
     <p style="font-size:14px; color:var(--muted); margin-top:4px;">A preventative control stops the unwanted event from happening. A mitigative control limits the damage once it does. Sort each one.</p>
@@ -398,6 +406,7 @@ body{margin:0;}
 
   <!-- REFLECTION -->
   <div class="card" id="reflectCard" hidden>
+    <button type="button" class="stage-back" data-back="2">← Back</button>
     <div class="section-label"><span class="dot"></span>Before You Start Work</div>
     <div class="reflect-q"><span class="q-num">1</span>What's STKY on this job site?</div>
     <div class="reflect-q"><span class="q-num">2</span>When a STKY event happens, what will protect you and the crew?</div>
@@ -471,6 +480,13 @@ body{margin:0;}
     });
     window.scrollTo({top:0, behavior:'smooth'});
   }
+
+  // Quiet "← Back" links let someone revisit an earlier stage if they want to —
+  // not a primary action, just available. Each stage keeps its own state (answers,
+  // sort progress, etc.), so going back and forward again just re-shows what they left.
+  Array.prototype.forEach.call(document.querySelectorAll('.stage-back'), function(btn){
+    btn.addEventListener('click', function(){ goToStage(parseInt(btn.getAttribute('data-back'), 10)); });
+  });
 
   // ---------- incident stepper ----------
   var steps = [
