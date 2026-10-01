@@ -213,24 +213,33 @@ img{max-width:100%;display:block;}
 .visually-hidden{position:absolute; left:-9999px;}
 
 .hero-banner{
-  position:relative; width:100%; max-width:680px; margin:0 auto 24px;
-  aspect-ratio:4/3; overflow:hidden; background:#000; border-radius:16px;
+  /* Stacking-grid hero: image, gradient and text all share one grid cell. The row's
+     height is the MAX of the image's aspect-ratio height and the text's natural height,
+     so a long title grows the whole hero taller instead of clipping or sliding under
+     the QR corner badge — the badge's column is reserved separately, below. */
+  position:relative; display:grid; width:100%; max-width:680px; margin:0 auto 24px;
+  overflow:hidden; background:#000; border-radius:16px;
 }
-@media (min-width:480px){ .hero-banner{ aspect-ratio:16/9; } }
-.hero-banner-img{width:100%; height:100%; object-fit:cover; display:block;}
+.hero-banner-img{
+  grid-area:1/1; width:100%; height:100%; object-fit:cover; display:block;
+  aspect-ratio:4/3;
+}
+@media (min-width:480px){ .hero-banner-img{ aspect-ratio:16/9; } }
 .hero-banner-overlay{
-  position:absolute; inset:0;
+  grid-area:1/1;
   background:linear-gradient(to top, rgba(10,9,8,.95) 0%, rgba(10,9,8,.82) 32%, rgba(10,9,8,.28) 62%, rgba(10,9,8,.05) 80%);
 }
 .hero-banner-content{
-  position:absolute; left:0; right:0; bottom:0; padding:18px clamp(16px,4vw,20px) 22px;
+  grid-area:1/1; align-self:end; position:relative; z-index:2;
+  padding:18px clamp(16px,4vw,20px) 22px;
+  padding-right:min(104px,28vw); /* permanent gutter: text never runs under the QR badge */
   display:flex; flex-direction:column; gap:10px;
 }
 .hero-brand-row{display:flex; align-items:center; gap:8px;}
 .hero-brand-row img{width:30px; height:auto; border-radius:7px; flex-shrink:0;}
 .hero-brand-row span{font-family:var(--font-util); font-size:11.5px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:#D8D5CA;}
 .hero-banner .eyebrow{color:var(--yellow); font-weight:800;}
-.hero-banner h1{font-size:clamp(32px,9vw,48px); line-height:1.02; color:#FFFFFF;}
+.hero-banner h1{font-size:clamp(26px,8vw,48px); line-height:1.05; color:#FFFFFF;}
 .hero-banner .deck{font-size:15px; color:#E4E1D8; max-width:54ch; line-height:1.5;}
 .time-chip{
   display:inline-flex; align-items:center; gap:6px; align-self:flex-start;
@@ -239,7 +248,7 @@ img{max-width:100%;display:block;}
   padding:6px 13px; border-radius:999px;
 }
 .hero-scan{
-  position:absolute; top:14px; right:14px; z-index:2;
+  position:absolute; top:14px; right:14px; z-index:3;
   display:flex; flex-direction:column; align-items:center; gap:5px;
 }
 .hero-scan .qr-box{
